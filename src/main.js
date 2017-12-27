@@ -6,15 +6,23 @@ let numberOfCols=120;
 let animator=undefined;
 
 const gameDraw=function(){
-  alert('game over');
-  clearInterval(animateSnake);
-  let reset=document.getElementById("reset_game");
-  let button=document.createElement('button');
-  button.innerHTML='restart';
-  reset.appendChild(button);
-  button.addEventListener('click',()=>{
-    startGame();
+  clearInterval(animator);
+  let restart=document.getElementById("reset_game");
+  restart.style.visibility='visible';
+  restart.addEventListener('click',()=>{
+    location.reload();
   });
+}
+const setNewTag=function(element,tagName,textContent){
+  let createNewElement=document.createElement(tagName);
+  createNewElement.innerHTML=textContent;
+  element.appendChild(createNewElement);
+}
+const createRestartButton=function(){
+  let reset=document.getElementById("reset_game");
+  setNewTag(reset,'h1','Game Over');
+  setNewTag(reset,'button','restart');
+  reset.style.visibility='hidden';
 }
 const animateSnake=function() {
   let oldHead=snake.getHead();
@@ -23,17 +31,15 @@ const animateSnake=function() {
   paintBody(oldHead);
   unpaintSnake(oldTail);
   paintHead(head);
-  if(isSelfCollision()==true||isCollisionWithWall()==true) return gameDraw()
+  if(snake.isSnakeEatItself()||snake.isSnakeTouchWall()) {
+    return gameDraw();
+  };
   if(head.isSameCoordAs(food)) {
     snake.grow();
     createFood(numberOfRows,numberOfCols);
     drawFood(food);
   }
 }
-const getPos=function(position){
-  return `${position.x},${position.y}`
-}
-
 
 const changeSnakeDirection=function(event) {
   switch (event.code) {
@@ -62,31 +68,21 @@ const createSnake=function() {
   body.push(tail);
   body.push(tail.next());
   let head=tail.next().next();
-
   snake=new Snake(head,body);
 }
 
 const createFood=function(numberOfRows,numberOfCols) {
   food=generateRandomPosition(numberOfCols,numberOfRows);
 }
-const isSelfCollision=function(){
-  let posOfHead=`${snake.head.x},${snake.head.y}`;
-  let posOfBody=snake.body.map(getPos);
-  return posOfBody.includes(posOfHead)
-}
-const isCollisionWithWall=function(){
-  let xEnds=[-1,numberOfCols];
-  let yEnds=[0,numberOfRows];
-  return xEnds.includes(snake.head.x)||yEnds.includes(snake.head.y);
-}
 
 const startGame=function() {
-  createSnake();
   drawGrids(numberOfRows,numberOfCols);
+  createSnake();
   drawSnake(snake);
   createFood(numberOfRows,numberOfCols);
   drawFood(food);
   addKeyListener();
+  createRestartButton();
   animator=setInterval(animateSnake,60);
 }
 

@@ -24,3 +24,7 @@
   background-color: blue;
   border-radius: 50%;
 }
+#reset_game{
+  width: 960px;
+  margin: 0 auto;
+}
