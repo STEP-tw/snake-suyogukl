@@ -12,6 +12,9 @@ const gameDraw=function(){
   let button=document.createElement('button');
   button.innerHTML='restart';
   reset.appendChild(button);
+  button.addEventListener('click',()=>{
+    startGame();
+  });
 }
 const animateSnake=function() {
   let oldHead=snake.getHead();
