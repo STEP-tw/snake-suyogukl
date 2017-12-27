@@ -8,6 +8,10 @@ let animator=undefined;
 const gameDraw=function(){
   alert('game over');
   clearInterval(animateSnake);
+  let reset=document.getElementById("reset_game");
+  let button=document.createElement('button');
+  button.innerHTML='restart';
+  reset.appendChild(button);
 }
 const animateSnake=function() {
   let oldHead=snake.getHead();
@@ -16,7 +20,7 @@ const animateSnake=function() {
   paintBody(oldHead);
   unpaintSnake(oldTail);
   paintHead(head);
-  if(isSelfCollision()==true||isCollisionWithWall()==true)
+  if(isSelfCollision()==true||isCollisionWithWall()==true) return gameDraw()
   if(head.isSameCoordAs(food)) {
     snake.grow();
     createFood(numberOfRows,numberOfCols);
